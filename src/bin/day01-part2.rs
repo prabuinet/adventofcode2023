@@ -1,36 +1,4 @@
 
-fn _main1() {
-    let str = include_str!("./input-day1.txt");
-
-    let mut sum = 0;
-
-    for line in str.lines() {
-        let mut first = 0;
-        let mut last = 0;
-
-        for ch in line.chars() {
-            if ch >= '0' && ch <= '9' {
-                first = ch.to_digit(10).unwrap() - '0'.to_digit(10).unwrap();
-                break;
-            }
-        }
-
-        for ch in line.chars().rev() {
-            if ch >= '0' && ch <= '9' {
-                last = ch.to_digit(10).unwrap() - '0'.to_digit(10).unwrap();
-                break;
-            }
-        }
-
-
-        sum += (first * 10) + last;
-    }
-
-    println!("{}", sum);
-
-}
-
-
 fn main() {
     let str = include_str!("./input-day1.txt");
 
