@@ -7,7 +7,7 @@ fn get_card_number(str: &str) -> i32 {
     s[1].parse::<i32>().unwrap()
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Card {
     number: i32,
     count: i32,
@@ -15,7 +15,7 @@ struct Card {
     score: i32,
 }
 
-fn main() {
+fn _main1() {
     let str = include_str!("./input-day4.txt");
 
     let lines = str.lines();
@@ -80,4 +80,63 @@ fn main() {
     println!("{}", cards.iter().map(|x| x.count as i32).sum::<i32>());
     println!("{}", iterations);
     //let line: Option<&str> = lines.nth(0);
+}
+
+
+// 10212704
+// 10212704
+
+fn main() {
+    let str = include_str!("./input-day4.txt");
+
+    let lines = str.lines();
+
+    let mut cards: Vec<Card> = Vec::<Card>::new();
+
+    for line in lines {
+        let ls: Vec<&str> = line.split(':').collect();
+
+        // println!("{}", get_game_number(&s[0]));
+        let card_number = get_card_number(&ls[0]);
+
+        let card_split: Vec<&str> = ls[1].split('|').collect();
+        let winning_numbers: HashSet<i32> = card_split[0].split(' ').map(|x| x.trim()).filter(|x| x.len() > 0).map(|x| x.parse::<i32>().expect(format!("{x}").as_str())).collect();
+        let available_numbers: Vec<i32> = card_split[1].split(' ').map(|x| x.trim()).filter(|x| x.len() > 0).map(|x| x.parse::<i32>().unwrap()).collect();
+
+        let mut score = 0;
+
+        for a in available_numbers {
+            if winning_numbers.contains(&a) {
+                score += 1;
+            }
+        }
+
+        cards.push(Card {
+            number: card_number,
+            count: 1,
+            scratched: 0,
+            score: score
+        })
+    }
+
+    let count = cards.len();
+
+    let mut i = 0;
+
+    while i < count {
+        let card = cards.get(i).unwrap();
+        let score = card.score;
+        let ccount = card.count;
+        println!("{}", card.number);
+
+        for j in (card.number + 1)..(card.number + 1 + score) {
+            if let Some(cd) = cards.get_mut((j - 1) as usize) {
+                cd.count += ccount;
+            }
+        }
+
+        i += 1;
+    }
+
+    println!("{}", cards.iter().map(|x| x.count as i32).sum::<i32>());
 }
